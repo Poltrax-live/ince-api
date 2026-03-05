@@ -12,6 +12,8 @@ module InceApi
     def create_token
       response = connection.request(request)
       JSON.parse(response.body)
+    rescue JSON::ParserError
+      {'status_code' => response.code.to_i, 'error_message' => "Invalid JSON response: #{response.body[0..200]}"}
     end
 
     def request

@@ -12,6 +12,8 @@ module InceApi
       @headers = response.each_header.to_h
 
       JSON.parse(response.body)
+    rescue JSON::ParserError
+      {'status_code' => response.code.to_i, 'error_message' => "Invalid JSON response: #{response.body[0..200]}"}
     end
 
     private

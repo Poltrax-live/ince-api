@@ -8,11 +8,13 @@ module InceApi
 
     def sim_usage
       response = connection.request(request)
-      if response.body != ''
-        JSON.parse(response.body)
-      else
+      if response.body.to_s.empty?
         {'status_code' => 404, 'error_message' => 'SIM with ICCID not found'}
+      else
+        JSON.parse(response.body)
       end
+    rescue JSON::ParserError
+      {'status_code' => response.code.to_i, 'error_message' => "Invalid JSON response: #{response.body[0..200]}"}
     end
 
     private
