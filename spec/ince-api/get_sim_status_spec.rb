@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'webmock/rspec'
 
@@ -13,8 +15,8 @@ RSpec.describe InceApi::GetSimStatus do
 
   it 'returns error hash when API returns HTML instead of JSON' do
     html_body = '<!doctype html><html><body>Service Unavailable</body></html>'
-    stub_request(:get, "https://api.1nce.com/management-api/v1/sims/123/status")
-      .to_return(status: 503, body: html_body, headers: {'Content-Type' => 'text/html'})
+    stub_request(:get, 'https://api.1nce.com/management-api/v1/sims/123/status')
+      .to_return(status: 503, body: html_body, headers: { 'Content-Type' => 'text/html' })
 
     response = described_class.new(access_token: 'token', iccid: '123').sim_status
     expect(response['status_code']).to eq 503
@@ -22,7 +24,7 @@ RSpec.describe InceApi::GetSimStatus do
   end
 
   it 'returns 404 error hash when body is empty' do
-    stub_request(:get, "https://api.1nce.com/management-api/v1/sims/123/status")
+    stub_request(:get, 'https://api.1nce.com/management-api/v1/sims/123/status')
       .to_return(status: 200, body: '', headers: {})
 
     response = described_class.new(access_token: 'token', iccid: '123').sim_status

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module InceApi
   class CreateSms
-    def initialize(access_token:, iccid:, params:{})
+    def initialize(access_token:, iccid:, params: {})
       @access_token = access_token
       @iccid = iccid
       @params = params
@@ -8,12 +10,17 @@ module InceApi
 
     def send
       response = connection.request(request)
-      response.code.to_i == 201 ? allowed_params.merge(status: 'OK') : { status: 'FAILED', error_code: response.code.to_i}
+      if response.code.to_i == 201
+        allowed_params.merge(status: 'OK')
+      else
+        { status: 'FAILED',
+          error_code: response.code.to_i }
+      end
     end
 
     private
 
-    ALLOWED_KEYS = %i(source_address payload udh dcs source_address_type expiry_date)
+    ALLOWED_KEYS = %i[source_address payload udh dcs source_address_type expiry_date].freeze
     def allowed_params
       @params.slice(*ALLOWED_KEYS)
     end
@@ -31,8 +38,8 @@ module InceApi
     def request
       Net::HTTP::Post.new(url).tap do |request|
         request.body = allowed_params.to_json
-        request["Accept"] = 'application/json'
-        request["Content-Type"] = 'application/json;charset=UTF-8'
+        request['Accept'] = 'application/json'
+        request['Content-Type'] = 'application/json;charset=UTF-8'
         request['Authorization'] = "Bearer #{@access_token}"
       end
     end

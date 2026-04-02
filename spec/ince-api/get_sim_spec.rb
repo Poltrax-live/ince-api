@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe InceApi::GetSim do
@@ -12,7 +14,7 @@ RSpec.describe InceApi::GetSim do
   it 'wrond iccid' do
     VCR.use_cassette('get_sim_wrong_iccid') do
       response = described_class.new(access_token: 'VALID TOKEN', iccid: '11111222233444').sim
-      expect(response['error_message']).to eq "SIM with ICCID not found"
+      expect(response['error_message']).to eq 'SIM with ICCID not found'
       expect(response['status_code']).to eq 404
     end
   end
