@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 module InceApi
@@ -7,19 +9,21 @@ module InceApi
       @password = password
     end
 
-    URL = URI("https://api.1nce.com/management-api/oauth/token")
+    URL = URI('https://api.1nce.com/management-api/oauth/token')
 
     def create_token
       response = connection.request(request)
       JSON.parse(response.body)
+    rescue JSON::ParserError
+      { 'status_code' => response.code.to_i, 'error_message' => "Invalid JSON response: #{response.body[0..200]}" }
     end
 
     def request
       Net::HTTP::Post.new(URL).tap do |request|
-        request["Accept"] = 'application/json'
-        request["Content-Type"] = 'application/x-www-form-urlencoded'
-        request["Authorization"] = "Basic #{encoded_credentials}"
-        request.body = "grant_type=client_credentials"
+        request['Accept'] = 'application/json'
+        request['Content-Type'] = 'application/x-www-form-urlencoded'
+        request['Authorization'] = "Basic #{encoded_credentials}"
+        request.body = 'grant_type=client_credentials'
       end
     end
 

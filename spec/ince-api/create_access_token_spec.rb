@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe InceApi::CreateAccessToken do
@@ -29,4 +31,3 @@ RSpec.describe InceApi::CreateAccessToken do
     end
   end
 end
-

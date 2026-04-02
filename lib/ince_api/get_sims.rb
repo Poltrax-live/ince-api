@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InceApi
   class GetSims
     attr_reader :headers
@@ -12,11 +14,13 @@ module InceApi
       @headers = response.each_header.to_h
 
       JSON.parse(response.body)
+    rescue JSON::ParserError
+      { 'status_code' => response.code.to_i, 'error_message' => "Invalid JSON response: #{response.body[0..200]}" }
     end
 
     private
 
-    ALLOWED_KEYS = %i(page pageSize q sort)
+    ALLOWED_KEYS = %i[page pageSize q sort].freeze
     def params_query
       URI.encode_www_form @params.slice(*ALLOWED_KEYS)
     end
@@ -33,7 +37,7 @@ module InceApi
 
     def request
       Net::HTTP::Get.new(url).tap do |request|
-        request["Accept"] = 'application/json'
+        request['Accept'] = 'application/json'
         request['Authorization'] = "Bearer #{@access_token}"
       end
     end

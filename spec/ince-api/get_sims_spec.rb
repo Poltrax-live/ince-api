@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe InceApi::GetSims do
@@ -11,19 +13,19 @@ RSpec.describe InceApi::GetSims do
 
   it 'get sim cards with params' do
     VCR.use_cassette('get_sims_with_params') do
-      response = described_class.new(access_token: 'VALID TOKEN', params: {page: 2, pageSize: 5}).sims
+      response = described_class.new(access_token: 'VALID TOKEN', params: { page: 2, pageSize: 5 }).sims
       expect(response.size).to eq 5
     end
   end
 
   it 'paginates results' do
-   VCR.use_cassette('get_sims_with_params_page_1') do
-      @response_p1 = described_class.new(access_token: 'VALID TOKEN', params: {page: 1, pageSize: 5}).sims
+    VCR.use_cassette('get_sims_with_params_page_1') do
+      @response_p1 = described_class.new(access_token: 'VALID TOKEN', params: { page: 1, pageSize: 5 }).sims
       expect(@response_p1.size).to eq 5
     end
 
     VCR.use_cassette('get_sims_with_params') do
-      @response_p2 = described_class.new(access_token: 'VALID TOKEN', params: {page: 2, pageSize: 5}).sims
+      @response_p2 = described_class.new(access_token: 'VALID TOKEN', params: { page: 2, pageSize: 5 }).sims
       expect(@response_p2.size).to eq 5
     end
 
@@ -32,7 +34,7 @@ RSpec.describe InceApi::GetSims do
 
   it 'returns headers too' do
     VCR.use_cassette('get_sims_with_params') do
-      service = described_class.new(access_token: 'VALID TOKEN', params: {page: 2, pageSize: 5})
+      service = described_class.new(access_token: 'VALID TOKEN', params: { page: 2, pageSize: 5 })
       response = service.sims
       headers = service.headers
       expect(response.size).to eq 5
